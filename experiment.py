@@ -65,5 +65,35 @@ def run_experiment():
     
     plt.show()
 
+def compare_mu():
+
+    fs = 500
+    duration = 5
+    num_taps = 16
+
+    mus = [0.0005, 0.001, 0.01]
+
+    x, d, s = generate_dataset(fs, duration)
+
+    plt.figure()
+
+    for mu in mus:
+        lms = LMSFilter(num_taps=num_taps, mu=mu)
+        _, e, _ = lms.adapt(x, d)
+
+        mse = e**2
+        plt.plot(mse, label=f"mu = {mu}")
+
+    plt.legend()
+    plt.title("Effect of Step Size (mu) on Convergence")
+    plt.xlabel("Samples")
+    plt.ylabel("Error^2")
+    plt.grid()
+
+    os.makedirs("results/figures", exist_ok=True)
+    plt.savefig("results/figures/mu_comparison.png", dpi=300)
+
+    plt.show()
+
 if __name__ == "__main__":
     run_experiment()
