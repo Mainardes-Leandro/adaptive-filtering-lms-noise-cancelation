@@ -12,12 +12,15 @@ def run_experiment():
     num_taps = 16
     mu = 0.001
 
+    # Create results folder
+    if save_figures:
+        os.makedirs("results/figures", exist_ok=True)
+
     # Generate signals
     x, d, s = generate_dataset(fs, duration)
 
     # LMS
     lms = LMSFilter(num_taps=num_taps, mu=mu)
-
     y, e, w_history = lms.adapt(x, d)
 
     # Plot signals
@@ -31,6 +34,9 @@ def run_experiment():
     plt.ylabel("Amplitude")
     plt.grid()
 
+    if save_figures:
+        plt.savefig("results/figures/signal_comparison.png", dpi=300)
+
     # Error convergence
     mse = e**2
 
@@ -40,6 +46,9 @@ def run_experiment():
     plt.xlabel("Samples")
     plt.ylabel("Error^2")
     plt.grid()
+
+    if save_figures:
+        plt.savefig("results/figures/error_convergence.png", dpi=300)
 
     # Weight evolution
     plt.figure()
@@ -51,6 +60,9 @@ def run_experiment():
     plt.ylabel("Coefficient Value")
     plt.grid()
 
+    if save_figures:
+        plt.savefig("results/figures/weight_evolution.png", dpi=300)
+    
     plt.show()
 
 if __name__ == "__main__":
